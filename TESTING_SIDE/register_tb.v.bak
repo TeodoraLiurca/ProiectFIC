@@ -1,0 +1,12 @@
+`include "C:/Users/Klandesting/Documents/PROJECT_FIC/IAS_MACHINE_APP/register.v"
+
+module register_tb1;
+
+reg[15:0] input;
+reg enable, set;
+wire[15:0] output;
+
+
+register this_register(.in(input), .en(enable), .set(set) .output(output);
+
+endmodule
