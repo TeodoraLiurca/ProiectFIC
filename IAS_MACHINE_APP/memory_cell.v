@@ -2,7 +2,7 @@ module memory_cell(input in, set, output out);
   wire a, b, c;
   assign a = ~(in&set);
   assign b = ~(a&set);
-  assign o = ~(a&c);
+  assign out = ~(a&c);
   assign c = ~(b&o);
 endmodule
 
