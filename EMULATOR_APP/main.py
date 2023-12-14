@@ -48,6 +48,8 @@ class CasioWatchEmulator:
         ]
 
         self.mode = 0
+        self.timer_state = 0
+        self.current_time = 0
 
         # Buttons
         self.button_mode = tk.Button(self.watch_frame, text="Mode", command=self.button_mode_clicked)
@@ -62,7 +64,7 @@ class CasioWatchEmulator:
         self.button_increment = tk.Button(self.watch_frame, text="Increment", command=self.button_increment)
         self.button_increment.place(x=180, y=70)
 
-        self.button_start = tk.Button(self.watch_frame, text="Start", command=self.button_start)
+        self.button_start = tk.Button(self.watch_frame, text="Start", command=self.toggle_start)
         self.button_start.place(x=260, y=70)
 
         self.is_light_on = False  # Flag to track light state
@@ -103,9 +105,23 @@ class CasioWatchEmulator:
             self.canvas.itemconfigure(iid, state='normal' if is_on else 'hidden')
 
     def update_time(self):
-        current_time = self.display()
-        self.show_time(*current_time)
-        self.root.after(1000, self.update_time)
+        if self.mode == 1 and self.timer_state == 1:
+            current_time = list((self.current_time // 60, self.current_time % 60))
+            self.show_time(*current_time)
+            current_time[1] += 1  # Increment the minutes
+            if current_time[1] == 60:
+                current_time[1] = 0
+                current_time[0] += 1  # Increment the hours
+            self.current_time = current_time[0] * 60 + current_time[1]  # Convert back to minutes
+            self.root.after(1000, self.update_time)
+        elif self.mode == 1:
+            current_time = list((self.current_time // 60, self.current_time % 60))
+            self.show_time(*current_time)
+            self.root.after(10, self.update_time)
+        else:
+            current_time = self.display()
+            self.show_time(*current_time)
+            self.root.after(1000, self.update_time)
 
     def display(self):
         if self.mode == 0:  #count
@@ -147,8 +163,16 @@ class CasioWatchEmulator:
             self.canvas.configure(bg="green")
         self.is_light_on = not self.is_light_on
 
-    def button_start(self):
-        ()
+    def toggle_start(self):
+        print(self.timer_state)
+        if self.mode == 1 and self.timer_state == 0:
+            self.timer_state = 1
+            self.current_time = 0
+        elif self.mode == 1:
+            self.timer_state = 0
+
+
+
 
 
 if __name__ == "__main__":
