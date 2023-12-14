@@ -4,7 +4,7 @@ module enabler #(parameter WIDTH = 16)(input [WIDTH-1:0] in, input en, output[WI
   generate 
       genvar i;
       for(i=0; i<WIDTH; i=i+1)begin
-        assign out[i] = in[i] & en ;
+        assign out[i] = en?in[i]:1'bz;
       end
   endgenerate
 endmodule
