@@ -11,6 +11,6 @@ endmodule
 
 module register #(parameter WIDTH = 16)(input [WIDTH-1:0]in, input en, set, output[WIDTH-1:0] out);
   wire[WIDTH-1:0] temp;
-  byte_memory_cell this_cell(.in(in), .set(set), .out(temp));
-  enabler this_enabler(.in(temp), .en(en), .out(out));
+  byte_memory_cell #(.WIDTH(WIDTH)) this_cell(.in(in), .set(set), .out(temp));
+  enabler #(.WIDTH(WIDTH)) this_enabler(.in(temp), .en(en), .out(out));
 endmodule
