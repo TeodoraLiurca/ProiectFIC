@@ -1,0 +1,14 @@
+#!/bin/zsh
+
+# Get the process IDs of all processes named "vvp"
+pids=$(pgrep -f vvp)
+
+# Check if any processes are found
+if [ -n "$pids" ]; then
+    echo "Killing processes with name 'vvp': $pids"
+    # Kill the processes
+    kill -9 $pids
+else
+    echo "No processes with name 'vvp' found."
+fi
+

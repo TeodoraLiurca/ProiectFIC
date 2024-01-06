@@ -1,17 +1,17 @@
 `include "register.v"
 `include "4x16_decoder.v"
 
-module random_access_memory #(parameter SIZE = 8)
-(input [SIZE-1:0] address, 
+module random_access_memory #(parameter SIZE = 16, parameter MAR_SIZE = 8)
+(input [MAR_SIZE-1:0] address, 
 input set_address, 
 input set, enable,
 input [SIZE-1:0]data_in,
 output [SIZE-1:0]data_out);
 
-    wire [7:0] to_dec;
-    wire [15:0] column, row;
+    wire [MAR_SIZE-1:0] to_dec;
+    wire [SIZE-1:0] column, row;
 
-    register #(.WIDTH(SIZE)) memory_address_register (.in(address), .set(set_address), .en(1'b1), .out(to_dec));
+    register #(.WIDTH(MAR_SIZE)) memory_address_register (.in(address), .set(set_address), .en(1'b1), .out(to_dec));
     decoder_4x16 dec1 (.A(to_dec[3:0]), .Y(column));
     decoder_4x16 dec2 (.A(to_dec[7:4]), .Y(row));
 

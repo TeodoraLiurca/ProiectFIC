@@ -11,71 +11,71 @@ decoder_4x16 dec (
 
 initial begin 
     //Initialize inputs
-    data_in = 0000;
+    data_in = 4'b0000;
 
     #10
 
-    data_in = 0001;
+    data_in = 4'b0001;
 
     #10
 
-    data_in = 0010;
+    data_in = 4'b0010;
 
     #10
 
-    data_in = 0011;
+    data_in = 4'b0011;
 
     #10
 
-    data_in = 0100;
+    data_in = 4'b0100;
 
     #10
 
-    data_in = 0101;
+    data_in = 4'b0101;
 
     #10
 
-    data_in = 0110;
+    data_in = 4'b0110;
 
     #10
 
-    data_in = 0111;
+    data_in = 4'b0111;
 
     #10
 
-    data_in = 1000;
+    data_in = 4'b1000;
 
     #10
 
-    data_in = 1001;
+    data_in = 4'b1001;
 
     #10
 
-    data_in = 1010;
+    data_in = 4'b1010;
 
     #10
 
-    data_in = 1011;
+    data_in = 4'b1011;
 
     #10
 
-    data_in = 1100;
+    data_in = 4'b1100;
 
     #10
 
-    data_in = 1101;
+    data_in = 4'b1101;
 
     #10
 
-    data_in = 1110;
+    data_in = 4'b1110;
 
     #10
 
-    data_in = 1111;
+    data_in = 4'b1111;
 
 end
 
   initial begin
-    $monitor("Time=%0t data_in=%b data_out=%b", $time, data_in, data_out);
+    $monitor("Time=%0t \t\t data_in=%b data_out=%b", $time, data_in, data_out);
   end
 endmodule
