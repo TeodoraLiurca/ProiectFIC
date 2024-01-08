@@ -35,20 +35,23 @@ module ram_testbench;
     data_in = 16'b1010101010101010;
 
     // Apply some test cases
-    #10 address = 0; set_address = 1; set = 1; enable = 0; // Write data_in to address 0
+    #10 address = 0; set_address = 1; set = 1; enable = 0; data_in=16'hABCD;// Write data_in to address 0
     #10 address = 0; set_address = 1; set = 0; enable = 1; // Outputdata address 0
 
     #10 address = 1; set_address = 1; set = 1; enable = 0; // Write data_in to address 3
     #10 address = 1; set_address = 1; set = 0; enable = 1; // Outputdata address 3
     
-    #10 address = 2; set_address = 1; set = 1; enable = 0; // Write data_in to address 3
+    #10 address = 2; set_address = 1; set = 1; enable = 0; data_in=16'hFFFF;// Write data_in to address 3
     #10 address = 2; set_address = 1; set = 0; enable = 1; // Outputdata address 3
 
-    #10 address = 3; set_address = 1; set = 1; enable = 0; // Write data_in to address 3
+    #10 address = 3; set_address = 1; set = 1; enable = 0; data_in=16'h0000;// Write data_in to address 3
     #10 address = 3; set_address = 1; set = 0; enable = 1; // Outputdata address 3
 
     #10 address = 4; set_address = 1; set = 1; enable = 0; // Write data_in to address 3
     #10 address = 4; set_address = 1; set = 0; enable = 1; // Outputdata address 3
+
+    #10 address = 0; set_address = 1; set = 0aa; enable = 1;
+    #10 address = 1; set_address = 1; set = 0; enable = 1;
 
 
     // Add more test cases as needed

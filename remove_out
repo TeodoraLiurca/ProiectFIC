@@ -1,0 +1,14 @@
+#!/bin/zsh
+
+# Set the directory where you want to remove .v.out files
+target_directory="TESTING_SIDE"
+
+# Navigate to the target directory
+cd "$target_directory" || exit
+
+# Remove all .v.out files in the directory
+find . -type f -name "*.v.out" -delete
+find . -type f -name "test" -delete
+find . -type f -name "test.vvp" -delete
+echo "Removed all .v.out files in $target_directory"
+
