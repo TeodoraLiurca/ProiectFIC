@@ -10,5 +10,13 @@ cd "$target_directory" || exit
 find . -type f -name "*.v.out" -delete
 find . -type f -name "test" -delete
 find . -type f -name "test.vvp" -delete
+
+cd ".." || exit
+cd "IAS_MACHINE_APP" 
+
+find . -type f -name "*.v.out" -delete
+find . -type f -name "test" -delete
+find . -type f -name "test.vvp" -delete
+
 echo "Removed all .v.out files in $target_directory"
 
