@@ -57,13 +57,9 @@ class CasioWatchEmulator:
         self.decremental = 0
         self.decr_state = 0
         self.interval1state = 0
-        self.interval2state = 0
         self.no_intervals1 = 0
-        self.no_intervals2 = 0
         self.interval1time = 0
         self.defaultinterval1time = 0
-        self.defaultinterval2time = 0
-        self.interval2time = 0
         self.default1 = 0
 
         # Buttons
@@ -165,7 +161,7 @@ class CasioWatchEmulator:
                 self.show_time(*current_time)
                 self.root.after(1000, self.update_time)
 
-        elif self.mode == 4 and self.decr_state == 1:
+        elif self.mode == 3 and self.decr_state == 1:
             if self.decremental > 0:
                 current_time = list((self.decremental // 60, self.decremental % 60))
                 self.show_time(*current_time)
@@ -176,7 +172,7 @@ class CasioWatchEmulator:
                 self.show_time(*current_time)
                 self.root.after(1000, self.update_time)
 
-        elif self.mode == 4 and self.decr_state == 0:
+        elif self.mode == 3 and self.decr_state == 0:
             current_time = list((self.decremental // 60, self.decremental % 60))
             self.show_time(*current_time)
             self.root.after(10, self.update_time)
@@ -196,11 +192,9 @@ class CasioWatchEmulator:
             return 0, 0
         if self.mode == 3:
             return 0, 0
-        if self.mode == 4:
-            return 0, 0
 
     def button_mode_clicked(self):
-        self.mode = (self.mode + 1) % 5
+        self.mode = (self.mode + 1) % 4
         print(self.mode)
         if self.mode == 0:  #count
             self.setmode = 1
@@ -208,9 +202,7 @@ class CasioWatchEmulator:
             self.setmode = 0
         if self.mode == 2:  #interval1
             self.setmode = 1
-        if self.mode == 3:  #interval2
-            self.setmode = 1  #will develop
-        if self.mode == 4:  #countdown
+        if self.mode == 3:  #countdown
             self.setmode = 1
 
     def button_set_clicked(self):
@@ -225,13 +217,13 @@ class CasioWatchEmulator:
         if self.decr_state == 1:
             print('can t change anything now, stop the countdown!')
 
-        elif self.setmode == 1 and self.mode == 4:
+        elif self.setmode == 1 and self.mode == 3:
             self.decremental += 1
 
         elif self.setmode == 1 and self.mode == 0:
             self.incremental_min += 1
 
-        elif self.setmode == 2 and self.mode == 4:
+        elif self.setmode == 2 and self.mode == 3:
             self.decremental += 60
 
         elif self.setmode == 2 and self.mode == 0:
@@ -242,15 +234,6 @@ class CasioWatchEmulator:
 
         elif self.mode == 2 and self.default1 == 0 and self.setmode == 2:
             self.no_intervals1 += 1
-
-        elif self.setmode == 3:
-            if self.setmode == 1:
-                self.interval2time += 1
-                self.defaultinterval2time += 1
-
-            elif self.setmode == 2:
-                self.no_intervals2 += 1
-
 
     def toggle_light(self):
         if self.is_light_on:
@@ -270,13 +253,9 @@ class CasioWatchEmulator:
             self.interval1state = 1
         elif self.interval1state == 1:
             self.interval1state = 0
-        elif self.mode == 3 and self.interval2state == 0:
-            self.interval2state = 1
-        elif self.interval2state == 1:
-            self.interval2state = 0
         elif self.mode == 1:
             self.timer_state = 0
-        elif self.mode == 4 and self.decr_state == 0:
+        elif self.mode == 3 and self.decr_state == 0:
             self.decr_state = 1
         elif self.decr_state == 1:
             self.decr_state = 0
