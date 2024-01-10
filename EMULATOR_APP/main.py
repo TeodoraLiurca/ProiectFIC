@@ -28,6 +28,7 @@ digits = (
     (0, 0, 0, 0, 0, 0, 0),  # colon
 )
 
+
 class CasioWatchEmulator:
     def __init__(self, root):
         self.root = root
@@ -50,6 +51,20 @@ class CasioWatchEmulator:
         self.mode = 0
         self.timer_state = 0
         self.current_time = 0
+        self.setmode = 1
+        self.incremental_hour = 0
+        self.incremental_min = 0
+        self.decremental = 0
+        self.decr_state = 0
+        self.interval1state = 0
+        self.interval2state = 0
+        self.no_intervals1 = 0
+        self.no_intervals2 = 0
+        self.interval1time = 0
+        self.defaultinterval1time = 0
+        self.defaultinterval2time = 0
+        self.interval2time = 0
+        self.default1 = 0
 
         # Buttons
         self.button_mode = tk.Button(self.watch_frame, text="Mode", command=self.button_mode_clicked)
@@ -118,6 +133,54 @@ class CasioWatchEmulator:
             current_time = list((self.current_time // 60, self.current_time % 60))
             self.show_time(*current_time)
             self.root.after(10, self.update_time)
+
+        elif self.mode == 2 and self.default1 == 0:
+            current_time = list((self.no_intervals1, self.defaultinterval1time))
+            self.show_time(*current_time)
+            self.root.after(1000, self.update_time)
+
+        elif self.mode == 2 and self.interval1state == 1:
+            if self.no_intervals1 > 0 and self.interval1time < self.defaultinterval1time:
+                current_time = list((self.no_intervals1, self.interval1time % 60))
+                self.show_time(*current_time)
+                self.interval1time += 1
+                self.root.after(1000, self.update_time)
+            elif self.interval1time == self.defaultinterval1time and self.no_intervals1 > 1:
+                current_time = list((self.no_intervals1, self.interval1time % 60))
+                self.show_time(*current_time)
+                self.interval1time = 0
+                self.no_intervals1 -= 1
+                self.root.after(1000, self.update_time)
+            elif self.interval1time == self.defaultinterval1time and self.no_intervals1 == 1:
+                self.interval1time = 0
+                self.no_intervals1 -= 1
+                current_time = list((self.no_intervals1, self.interval1time % 60))
+                self.show_time(*current_time)
+                self.root.after(1000, self.update_time)
+
+            elif self.mode == 2 and self.no_intervals1 == 0 and self.interval1time == 0:
+                self.default1 = 0
+                self.defaultinterval1time = 0
+                current_time = list((0, 0))
+                self.show_time(*current_time)
+                self.root.after(1000, self.update_time)
+
+        elif self.mode == 4 and self.decr_state == 1:
+            if self.decremental > 0:
+                current_time = list((self.decremental // 60, self.decremental % 60))
+                self.show_time(*current_time)
+                self.decremental -= 1
+                self.root.after(1000, self.update_time)
+            elif self.decremental == 0:
+                current_time = list((self.decremental // 60, self.decremental % 60))
+                self.show_time(*current_time)
+                self.root.after(1000, self.update_time)
+
+        elif self.mode == 4 and self.decr_state == 0:
+            current_time = list((self.decremental // 60, self.decremental % 60))
+            self.show_time(*current_time)
+            self.root.after(10, self.update_time)
+
         else:
             current_time = self.display()
             self.show_time(*current_time)
@@ -126,7 +189,7 @@ class CasioWatchEmulator:
     def display(self):
         if self.mode == 0:  #count
             current_time = time.localtime(time.time())  #getting the current time
-            return current_time.tm_hour, current_time.tm_min  #returning the current
+            return ((current_time.tm_hour + self.incremental_hour) % 24, (current_time.tm_min + self.incremental_min) % 60) #returning the current
         if self.mode == 1:
             return 0, 0
         if self.mode == 2:
@@ -140,23 +203,56 @@ class CasioWatchEmulator:
         self.mode = (self.mode + 1) % 5
         print(self.mode)
         if self.mode == 0:  #count
-            ()
+            self.setmode = 1
         if self.mode == 1:  #timer
-            ()
-        if self.mode == 2:  #increment1
-            ()  #will develop
-        if self.mode == 3:  #increment2
-            ()  #will develop
-        if self.mode == 4:  #start
-            ()  #will develop
+            self.setmode = 0
+        if self.mode == 2:  #interval1
+            self.setmode = 1
+        if self.mode == 3:  #interval2
+            self.setmode = 1  #will develop
+        if self.mode == 4:  #countdown
+            self.setmode = 1
 
     def button_set_clicked(self):
-        print("Set button clicked")
+        if self.setmode == 1:
+            self.setmode = 2
+            print(self.setmode)
+        elif self.setmode == 2:
+            self.setmode = 1
+            print(self.setmode)
 
     def button_increment(self):
-        print("Increment button clicked")
+        if self.decr_state == 1:
+            print('can t change anything now, stop the countdown!')
 
-    def toggle_light(self, event=None):
+        elif self.setmode == 1 and self.mode == 4:
+            self.decremental += 1
+
+        elif self.setmode == 1 and self.mode == 0:
+            self.incremental_min += 1
+
+        elif self.setmode == 2 and self.mode == 4:
+            self.decremental += 60
+
+        elif self.setmode == 2 and self.mode == 0:
+            self.incremental_hour += 1
+
+        elif self.mode == 2 and self.default1 == 0 and self.setmode == 1:
+            self.defaultinterval1time += 1
+
+        elif self.mode == 2 and self.default1 == 0 and self.setmode == 2:
+            self.no_intervals1 += 1
+
+        elif self.setmode == 3:
+            if self.setmode == 1:
+                self.interval2time += 1
+                self.defaultinterval2time += 1
+
+            elif self.setmode == 2:
+                self.no_intervals2 += 1
+
+
+    def toggle_light(self):
         if self.is_light_on:
             self.canvas.configure(bg="black")
         else:
@@ -165,13 +261,25 @@ class CasioWatchEmulator:
 
     def toggle_start(self):
         print(self.timer_state)
+        print(self.decremental)
         if self.mode == 1 and self.timer_state == 0:
             self.timer_state = 1
             self.current_time = 0
+        elif self.mode == 2 and self.interval1state == 0 and self.default1 == 0:
+            self.default1 = 1
+            self.interval1state = 1
+        elif self.interval1state == 1:
+            self.interval1state = 0
+        elif self.mode == 3 and self.interval2state == 0:
+            self.interval2state = 1
+        elif self.interval2state == 1:
+            self.interval2state = 0
         elif self.mode == 1:
             self.timer_state = 0
-
-
+        elif self.mode == 4 and self.decr_state == 0:
+            self.decr_state = 1
+        elif self.decr_state == 1:
+            self.decr_state = 0
 
 
 
